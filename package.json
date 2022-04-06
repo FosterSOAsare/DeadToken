@@ -11,5 +11,9 @@
   },
   "keywords": [],
   "author": "Asare Foster",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "ethereumjs-tx": "^2.1.2"
+  }
 }
