@@ -60,4 +60,45 @@ contract("DeadToken", (accounts) => {
     balance2 = await balance2.toNumber();
     assert.equal(balance2, 2000, "It's supposed to be 2000");
   });
+  //   Testing the freeze functionality
+  it("make all necessary changes after a freeze function ", async () => {
+    await instance.freeze(2000, {
+      from: accounts[3],
+    });
+    let balance = await instance.balanceOf(accounts[3]);
+    balance = await balance.toNumber();
+    assert.equal(balance, 999995900, "It's supposed to be 999995900");
+    let frozen = await instance.frozenTokens(accounts[3]);
+    frozen = await frozen.toNumber();
+    assert.equal(frozen, 2000, "It's supposed to be 2000");
+  });
+  //   Testing the unfreeze functionality
+  it("make all necessary changes after an unfreeze function ", async () => {
+    await instance.unfreeze(100, {
+      from: accounts[3],
+    });
+    let balance = await instance.balanceOf(accounts[3]);
+    balance = await balance.toNumber();
+    assert.equal(balance, 999996000, "It's supposed to be 999996000");
+    let frozen = await instance.frozenTokens(accounts[3]);
+    frozen = await frozen.toNumber();
+    assert.equal(frozen, 1900, "It's supposed to be 1900");
+  });
+
+  //   Testing the mint functionality
+  it("make all necessary changes after a mint function ", async () => {
+    let address = DeadToken.address;
+    await instance.mintTokens(address, 1000000, {
+      from: accounts[3],
+    });
+    let balance = await instance.balanceOf(address);
+    balance = await balance.toNumber();
+    assert.equal(balance, 1000000, "It's supposed to be 1000000");
+    let balance2 = await instance.balanceOf(deployer);
+    balance2 = await balance2.toNumber();
+    assert.equal(balance2, 998996000, "It's supposed to be 998996000");
+    let mintTimestamp = await instance.mintTimestamp();
+    mintTimestamp = await mintTimestamp.toNumber();
+    assert.notEqual(mintTimestamp, 0, "It is set to a greater blockTimestamp");
+  });
 });

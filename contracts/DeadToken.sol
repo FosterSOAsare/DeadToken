@@ -13,7 +13,7 @@ contract DeadToken {
     uint256 public allowedMintTokens;
 
     mapping(address => uint256) public balanceOf;
-    mapping(address => uint256) public freezeAmount;
+    mapping(address => uint256) public frozenTokens;
     mapping(address => mapping(address => uint256)) public allowance;
 
     constructor(uint256 _totalSupply) {
@@ -100,17 +100,17 @@ contract DeadToken {
         );
 
         balanceOf[msg.sender] -= _value;
-        freezeAmount[msg.sender] += _value;
+        frozenTokens[msg.sender] += _value;
         return true;
     }
 
     function unfreeze(uint256 _value) public returns (bool success) {
         require(
-            freezeAmount[msg.sender] >= _value,
+            frozenTokens[msg.sender] >= _value,
             "Insuffiecient tokens to unfreeze"
         );
 
-        freezeAmount[msg.sender] -= _value;
+        frozenTokens[msg.sender] -= _value;
         balanceOf[msg.sender] += _value;
         return true;
     }
